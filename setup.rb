@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'pry' # in case you want to use binding.pry
 require 'active_record'
 require_relative 'lib/store'
@@ -24,7 +26,9 @@ puts 'Setting up Database (recreating tables) ...'
 
 ActiveRecord::Schema.define do
   drop_table :stores if ActiveRecord::Base.connection.table_exists?(:stores)
-  drop_table :employees if ActiveRecord::Base.connection.table_exists?(:employees)
+  if ActiveRecord::Base.connection.table_exists?(:employees)
+    drop_table :employees
+  end
   create_table :stores do |t|
     t.column :name, :string
     t.column :annual_revenue, :integer
@@ -38,6 +42,7 @@ ActiveRecord::Schema.define do
     table.column :last_name, :string
     table.column :hourly_rate, :integer
     table.timestamps null: false
+    table.column :password, :string
   end
 end
 
